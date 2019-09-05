@@ -18,7 +18,7 @@ text_upload_photo.pack()
 
 f_path = ''
 def browse_a_file():
-    f_path=tk.filedialog.askopenfilename(initialdir="/", title="Select an Image", filetype=(("PNG File", "*.png"), ("All files", "*.*")))
+    f_path=tk.filedialog.askopenfilename(initialdir="/", title="Select an Image", filetype=(("JPG File", "*.jpg"), ("All files", "*.*")))
     if not f_path:
         tk.messagebox.showerror("No Image chosen!", "Please, choose the image.")
     else:
@@ -40,15 +40,23 @@ def func(f_path):
 
     thread_progressbar.start() 
     thread_img_ocr.start()
-
     thread_progressbar.join()
     thread_img_ocr.join()
+
     if not thread_img_ocr.is_alive():
         window_output_text=tk.Tk()
         interface_settings.create_window(window_output_text)
-        text_ocr=tk.Label(window_output_text, text=tesseract_core.str_tess, font=("Arial", 16 ))
-        text_ocr.config(anchor=tk.CENTER)
+        # text_ocr=tk.Label(window_output_text, text=tesseract_core.str_tess, font=("Arial", 16 ))
+        # text_ocr.config(anchor=tk.CENTER)
+        # text_ocr.pack()
+        text_ocr = tk.Text(window_output_text, height=100, borderwidth=0)
+        text_ocr.insert(1.0, tesseract_core.str_tess)
         text_ocr.pack()
+        text_ocr.configure(state="disabled")
+        text_ocr.configure(inactiveselectbackground=text_ocr.cget("selectbackground"))
+
+window_save_text=tk.Tk()
+interface_settings.create_window(window_save_text)
 
 
 window_upload_stage.mainloop()
@@ -61,9 +69,9 @@ window_upload_stage.mainloop()
 
 # придумати красивий інтерфейс
 # реалізувати красивий інтерфейс
-# передбачити помилки (трай кеч + меседжбокси)
+# передбачити помилки (трай кеч + меседжбокси) 
+# --- вибраний файл неправильного формату
+# 
 # зробити .exe
 # гарно і логічно розкидати все по файлах
 # додати змістовні коментарі
-
-# спробувати розібратись з укр мовою
