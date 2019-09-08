@@ -3,11 +3,13 @@ import tkinter.filedialog
 import tkinter.messagebox
 import tesseract_core
 import interface_settings
-import test1
 
+def file_save():
+    fout = tk.filedialog.asksaveasfile(mode='w', defaultextension=".txt")
+    fout.write(tesseract_core.str_tess)
+    fout.close()
+    #message about success
 def main():
-
-
 
     window_upload_stage = tk.Tk()
 
@@ -38,6 +40,8 @@ def main():
     btn_upload=tk.Button(window_upload_stage, text="Add Image", command=browse_a_file)
     btn_upload.config(anchor=tk.CENTER)
     btn_upload.pack()
+
+    
     def someFunc(f_path):
         window_upload_stage.destroy()
         tesseract_core.image_ocr(f_path)
@@ -52,7 +56,7 @@ def main():
         text_ocr.configure(state="disabled")
         text_ocr.configure(inactiveselectbackground=text_ocr.cget("selectbackground"))
         button = tk.Button(window_output_text,
-                        text="Save", width =5, height = 5) #callback = SOME_FUNC_TO_SAVE_FILE_MB_WINDOW_TO_CHOOSE_EXTENSION
+                        text="Save", width =5, height = 5, command=file_save) #callback = SOME_FUNC_TO_SAVE_FILE_MB_WINDOW_TO_CHOOSE_EXTENSION
         button1 = tk.Button(window_output_text,
                         text="Repeat", width =5, height = 5, command=restart) #callback = START_PROGRAM_AGAIN
         button.place(x=200, y=50)
@@ -65,9 +69,6 @@ def main():
 
 main()
 tk.mainloop()
-
-# на те ж вікно додати кнопку збереження тексту і кнопку спробувати ще раз (хз чи точно)
-# додати на вибір куди зберегти текст (ворд, тхт,...)
 
 
 # передбачити помилки (трай кеч + меседжбокси) 
