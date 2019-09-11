@@ -5,23 +5,35 @@ import tesseract_core
 import tk_setup
 
 def start_tesseract():
+    '''Browsing a file, running tesseract'''
     global f_path
     f_path=''
 
     while True:
-        f_path=tk.filedialog.askopenfilename(initialdir="/", title="Select an Image", filetype=(("PNG File", "*.png"), ("All files", "*.*")))
+        f_path=tk.filedialog.askopenfilename(initialdir="/", title="Select an Image", 
+                            filetype=(("PNG file", "*.png"), ("JPG file", "*.jpg"), ("JPEG file", "*.jpeg"), ("All files", "*.*")))
         if not f_path:
             msg=tk.messagebox.askquestion("Warning!", "No Image chosen! Would you like to try again?")
             if msg=="yes":
                 pass
             else:
                 exit()
+
         else:
-            tesseract_core.recognition(f_path, window_upload_stage)
-            tk_setup.save_window(file_save, restart)
-            break
+            try:
+                window_upload_stage.withdraw()
+                tesseract_core.image_ocr(f_path)
+                tk_setup.save_window(file_save, restart)
+                break
+            except OSError:
+                tk.messagebox.showerror("Error!", "Bad file extension. PNG, JPG, JPEG required.")
+            except tk.TclError:
+                tk.messagebox.showerror("Error!", "System error! Exiting the application.")
+
+                exit()
+
+
 def file_save():
-    # global var
     if tk_setup.var.get() == 0:
         extension = '.pdf'
     elif tk_setup.var.get() == 1:
@@ -50,22 +62,20 @@ def main():
     add_img=tk.PhotoImage(file=r"D:\Python Projects\OCR_Project\plus.png")
 
 
-    #adding text instruction on a window_upload_stage
     text_upload_photo=tk.Label(window_upload_stage, text="CHOOSE PHOTO", font=("Gabriola", 30))
     text_upload_photo.config(anchor=tk.CENTER)
     text_upload_photo.pack()
 
-    btn_upload=tk.Button(window_upload_stage, image=add_img, command=start_tesseract)
+    try:
+        btn_upload=tk.Button(window_upload_stage, image=add_img, command=start_tesseract)
+    except tk.TclError:
+        btn_upload=tk.Button(window_upload_stage, text="Add Image", command=start_tesseract)
     btn_upload.config(anchor=tk.CENTER)
     btn_upload.pack()
+    
 
 
 
 main()
 tk.mainloop()
 
-
-
-# зробити .exe
-
-# додати змістовні коментарі
